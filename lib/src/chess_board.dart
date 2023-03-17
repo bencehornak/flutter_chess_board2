@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:chess_vectors_flutter/chess_vectors_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:chess/chess.dart' hide State;
+import 'package:flutter_svg/flutter_svg.dart';
 import 'board_arrow.dart';
 import 'chess_board_controller.dart';
 import 'constants.dart';
@@ -167,29 +168,29 @@ class _ChessBoardState extends State<ChessBoard> {
   }
 
   /// Returns the board image
-  Image _getBoardImage(BoardColor color) {
+  Widget _getBoardImage(BoardColor color) {
     switch (color) {
       case BoardColor.brown:
-        return Image.asset(
-          "images/brown_board.png",
+        return SvgPicture.asset(
+          "assets/brown_board.svg",
           package: 'flutter_chess_board',
           fit: BoxFit.cover,
         );
       case BoardColor.darkBrown:
-        return Image.asset(
-          "images/dark_brown_board.png",
+        return SvgPicture.asset(
+          "assets/dark_brown_board.svg",
           package: 'flutter_chess_board',
           fit: BoxFit.cover,
         );
       case BoardColor.green:
-        return Image.asset(
-          "images/green_board.png",
+        return SvgPicture.asset(
+          "assets/green_board.svg",
           package: 'flutter_chess_board',
           fit: BoxFit.cover,
         );
       case BoardColor.orange:
-        return Image.asset(
-          "images/orange_board.png",
+        return SvgPicture.asset(
+          "assets/orange_board.svg",
           package: 'flutter_chess_board',
           fit: BoxFit.cover,
         );
