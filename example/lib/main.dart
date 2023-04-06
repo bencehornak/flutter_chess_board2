@@ -55,6 +55,16 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.red.withOpacity(0.7),
                   ),
                 ],
+                highlightedSquares: [
+                  BoardHighlightedSquare(
+                    'd2',
+                    color: Colors.green.withOpacity(.5),
+                  ),
+                  BoardHighlightedSquare(
+                    'e2',
+                    color: Colors.green.withOpacity(.5),
+                  ),
+                ],
                 boardOrientation: PlayerColor.white,
               ),
             ),

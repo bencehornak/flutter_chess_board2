@@ -27,6 +27,7 @@ class ChessBoard extends StatefulWidget {
   final VoidCallback? onMove;
 
   final List<BoardArrow> arrows;
+  final List<BoardHighlightedSquare> highlightedSquares;
 
   const ChessBoard({
     Key? key,
@@ -37,6 +38,7 @@ class ChessBoard extends StatefulWidget {
     this.boardOrientation = PlayerColor.white,
     this.onMove,
     this.arrows = const [],
+    this.highlightedSquares = const [],
   }) : super(key: key);
 
   @override
@@ -58,6 +60,17 @@ class _ChessBoardState extends State<ChessBoard> {
                 child: _getBoardImage(widget.boardColor),
                 aspectRatio: 1.0,
               ),
+              if (widget.highlightedSquares.isNotEmpty)
+                IgnorePointer(
+                  child: AspectRatio(
+                    aspectRatio: 1.0,
+                    child: CustomPaint(
+                      child: Container(),
+                      painter: _HighlightedSquarePainter(
+                          widget.highlightedSquares, widget.boardOrientation),
+                    ),
+                  ),
+                ),
               AspectRatio(
                 aspectRatio: 1.0,
                 child: GridView.builder(
@@ -414,5 +427,45 @@ class _ArrowPainter extends CustomPainter {
   @override
   bool shouldRepaint(_ArrowPainter oldDelegate) {
     return arrows != oldDelegate.arrows;
+  }
+}
+
+class _HighlightedSquarePainter extends CustomPainter {
+  List<BoardHighlightedSquare> highlightedSquares;
+  PlayerColor boardOrientation;
+
+  _HighlightedSquarePainter(this.highlightedSquares, this.boardOrientation);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var blockSize = size.width / 8;
+
+    for (var highlightedSquare in highlightedSquares) {
+      var startFile = files.indexOf(highlightedSquare.square[0]);
+      var startRank = int.parse(highlightedSquare.square[1]) - 1;
+
+      int effectiveRowStart = 0;
+      int effectiveColumnStart = 0;
+
+      if (boardOrientation == PlayerColor.black) {
+        effectiveColumnStart = 7 - startFile;
+        effectiveRowStart = startRank;
+      } else {
+        effectiveColumnStart = startFile;
+        effectiveRowStart = 7 - startRank;
+      }
+
+      var paint = Paint()..color = highlightedSquare.color;
+
+      canvas.drawRect(
+          Rect.fromLTWH((effectiveColumnStart * blockSize),
+              (effectiveRowStart * blockSize), blockSize, blockSize),
+          paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_HighlightedSquarePainter oldDelegate) {
+    return highlightedSquares != oldDelegate.highlightedSquares;
   }
 }
