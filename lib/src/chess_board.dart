@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:chess_vectors_flutter/chess_vectors_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:chess/chess.dart' hide State;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'board_arrow.dart';
@@ -28,6 +29,7 @@ class ChessBoard extends StatefulWidget {
 
   final List<BoardArrow> arrows;
   final List<BoardHighlightedSquare> highlightedSquares;
+  final material.Color? lastMoveHighlightColor;
 
   const ChessBoard({
     Key? key,
@@ -39,6 +41,7 @@ class ChessBoard extends StatefulWidget {
     this.onMove,
     this.arrows = const [],
     this.highlightedSquares = const [],
+    this.lastMoveHighlightColor,
   }) : super(key: key);
 
   @override
@@ -60,14 +63,30 @@ class _ChessBoardState extends State<ChessBoard> {
                 child: _getBoardImage(widget.boardColor),
                 aspectRatio: 1.0,
               ),
-              if (widget.highlightedSquares.isNotEmpty)
+              if (widget.highlightedSquares.isNotEmpty ||
+                  widget.lastMoveHighlightColor != null)
                 IgnorePointer(
                   child: AspectRatio(
                     aspectRatio: 1.0,
                     child: CustomPaint(
                       child: Container(),
                       painter: _HighlightedSquarePainter(
-                          widget.highlightedSquares, widget.boardOrientation),
+                        widget.highlightedSquares +
+                            (widget.lastMoveHighlightColor != null &&
+                                    game.history.isNotEmpty
+                                ? [
+                                    BoardHighlightedSquare(
+                                      game.history.last.move.fromAlgebraic,
+                                      color: widget.lastMoveHighlightColor!,
+                                    ),
+                                    BoardHighlightedSquare(
+                                      game.history.last.move.toAlgebraic,
+                                      color: widget.lastMoveHighlightColor!,
+                                    ),
+                                  ]
+                                : []),
+                        widget.boardOrientation,
+                      ),
                     ),
                   ),
                 ),
